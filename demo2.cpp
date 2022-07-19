@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
     }
 
     OneCoupleCompare(argv[1], argv[2]);
-    compareScanContext(argv[1], argv[2]);
+    // compareScanContext(argv[1], argv[2]);
 
     return 0;
 }   
