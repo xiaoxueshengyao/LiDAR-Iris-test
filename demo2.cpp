@@ -65,6 +65,11 @@ void OneCoupleCompare(string cloudFileName1, string cloudFileName2)
     cv::imshow("LiDAR Iris Template", img_T);
     // cv::imwrite("../img/temp.bmp", img_T);
 
+    cv::Mat1b img_M1;
+    img_M1 = fd1.M;
+    img_M1 *= 255;
+    cv::imshow("lidar1 m",img_M1);
+
     cv::waitKey(0);
 }
 

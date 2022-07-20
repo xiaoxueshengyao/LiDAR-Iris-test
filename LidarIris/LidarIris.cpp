@@ -70,7 +70,7 @@ float LidarIris::Compare(const LidarIris::FeatureDesc &img1, const LidarIris::Fe
     }
     if(_matchNum==0)
     {
-        auto firstRect = FFTMatch(img2.img, img1.img);
+        auto firstRect = FFTMatch(img2.img, img1.img);//得到偏移量
         int firstShift = firstRect.center.x - img1.img.cols / 2;
         float dis1;
         int bias1;
@@ -82,9 +82,15 @@ float LidarIris::Compare(const LidarIris::FeatureDesc &img1, const LidarIris::Fe
         {
             firstShift = -356;
         }
+        
         GetHammingDistance(img1.T, img1.M, img2.T, img2.M, firstShift, dis1, bias1);
+        img1.M.convertTo(img1.M,CV_8UC1,255);
+        img2.M.convertTo(img2.M,CV_8UC1,255);
+        cv::imshow("img1M",img1.M);
+        cv::imshow("img2M",img2.M);
         if (bias)
             *bias = bias1;
+        std::cout<<"dis1:"<<dis1<<" bias1:"<<bias1<<std::endl;
         return dis1;
 
     }
@@ -183,16 +189,24 @@ void LidarIris::GetHammingDistance(const cv::Mat1b &T1, const cv::Mat1b &M1, con
 {
     dis = NAN;
     bias = -1;
+    std::cout<<"shift:"<<scale<<std::endl;
     for (int shift = scale - 2; shift <= scale + 2; shift++)
     {
-        cv::Mat1b T1s = circShift(T1, 0, shift);
+        cv::Mat1b T1s = circShift(T1, 0, shift);//只在cols方向有位移
         cv::Mat1b M1s = circShift(M1, 0, shift);
         cv::Mat1b mask = M1s | M2;
+        // cv::imshow("T1",T1);
+        // cv::imshow("T1s",T1s);
+        // cv::imshow("M1s",M1s);
+        // cv::imshow("mask",mask);
         int MaskBitsNum = cv::sum(mask / 255)[0];
+        std::cout<<"maskbitnum: "<<MaskBitsNum<<std::endl;
         int totalBits = T1s.rows * T1s.cols - MaskBitsNum;
-        cv::Mat1b C = T1s ^ T2;
+        std::cout<<"totalBits: "<<totalBits<<std::endl;
+        cv::Mat1b C = T1s ^ T2;//异或运算
         C = C & ~mask;
         int bitsDiff = cv::sum(C / 255)[0];
+        std::cout<<"bitDiff:"<<bitsDiff<<std::endl;
         if (totalBits == 0)
         {
             dis = NAN;

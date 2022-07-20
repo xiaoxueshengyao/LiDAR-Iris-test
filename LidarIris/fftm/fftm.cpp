@@ -254,7 +254,7 @@ RotatedRect LogPolarFFTTemplateMatch(Mat& im0, Mat& im1/*, double canny_threshol
     std::cout<<"find translation : "<<tr<<std::endl;
 
     // compute rotated rectangle parameters
-    RotatedRect rr;
+    RotatedRect rr;//center,size,angle
     rr.center = tr + Point2d(im0.cols / 2, im0.rows / 2);
     rr.angle = -angle;
     rr.size.width = im1.cols / scale;
