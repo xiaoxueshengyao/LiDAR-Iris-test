@@ -17,12 +17,21 @@ public:
         cv::Mat1b M;
     };
 
-    LidarIris(int nscale, int minWaveLength, float mult, float sigmaOnf, int matchNum) : _nscale(nscale),
-                                                                                         _minWaveLength(minWaveLength),
-                                                                                         _mult(mult),
-                                                                                         _sigmaOnf(sigmaOnf),
-                                                                                         _matchNum(matchNum)
-    {
+    /**
+     * nscale:滤波器参数
+     * 
+     **/
+    LidarIris(int nscale,           //分幾個尺度
+              int minWaveLength,    //波長，用於計算中心頻率
+              float mult,           //波長變換率
+              float sigmaOnf,       //濾波器參數，k/ω0 用一个常量代替，以保证滤波器在不同中心频率时的对数频率尺度下形状不变
+              int matchNum) 
+              : _nscale(nscale),
+                _minWaveLength(minWaveLength),
+                _mult(mult),
+                _sigmaOnf(sigmaOnf),
+                _matchNum(matchNum)
+{
     }
     LidarIris(const LidarIris &) = delete;
     LidarIris &operator=(const LidarIris &) = delete;
